@@ -229,10 +229,14 @@ function swapTransfer(img, name)
         criterion.net.modules[#criterion.net.modules]:setTarget(swap_latent)
         x = synth(img)
     end
-
+    
     ext = paths.extname(name)
-    image.save(opt.save .. '/' .. string.gsub(name, '.' .. ext, '_stylized.' .. ext), x)
-
+    style_name = paths.basename(opt.style)
+    style_name_prefix = string.gsub(style_name, '.' .. paths.extname(style_name), '')
+    stylized_name = string.gsub(name,'.' .. ext, '_' .. style_name_prefix .. '.' .. ext)
+    --set the result name with form 'content_style.ext' so that output name can correspond to content and stlye
+    image.save(opt.save .. '/' .. stylized_name, x)
+    
     criterion.net:clearState()
 
     return x
